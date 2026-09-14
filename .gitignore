@@ -1,0 +1,64 @@
+# Secrets / environment files
+*.env
+.env
+.env.*
+!*.env.example
+
+# Credentials / keys
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# WireGuard / VPN
+wg0.conf
+*.conf.private
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+
+# Logs
+*.log
+logs/
+
+# Runtime data
+data/
+backups/
+
+# PostgreSQL / Redis persistence
+postgres/
+redis/
+appendonlydir/
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Terraform local state
+.terraform/
+*.tfstate
+*.tfstate.*
+
+# Terraform variable files that may contain secrets
+*.tfvars
+*.tfvars.json
+
+# Temporary / backup files
+*.tmp
+*.bak
+*.bak-*
+*~

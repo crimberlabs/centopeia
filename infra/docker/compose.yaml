@@ -1,0 +1,66 @@
+name: centopeia
+
+services:
+
+  gateway:
+    image: centopeia-gateway:0.1.0
+    container_name: centopeia-gateway
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      CORE_URL: http://core:8000
+    networks:
+      - centopeia_edge
+      - centopeia_internal
+
+  core:
+    image: centopeia-core:0.2.0
+    container_name: centopeia-core
+    restart: unless-stopped
+    env_file:
+      - /opt/centopeia/config/postgres.env
+    environment:
+      POSTGRES_HOST: postgres
+      REDIS_HOST: redis
+    networks:
+      - centopeia_internal
+
+  postgres:
+    image: postgres:17
+    container_name: centopeia-postgres
+    restart: unless-stopped
+    env_file:
+      - /opt/centopeia/config/postgres.env
+    volumes:
+      - /opt/centopeia/data/postgres:/var/lib/postgresql/data
+    networks:
+      - centopeia_internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  redis:
+    image: redis:8
+    container_name: centopeia-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - /opt/centopeia/data/redis:/data
+    networks:
+      - centopeia_internal
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+networks:
+  centopeia_edge:
+    external: true
+  centopeia_internal:
+    external: true
