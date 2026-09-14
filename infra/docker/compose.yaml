@@ -25,6 +25,7 @@ services:
       REDIS_HOST: redis
     networks:
       - centopeia_internal
+      - centopeia_ai
 
   postgres:
     image: postgres:17
@@ -63,4 +64,6 @@ networks:
   centopeia_edge:
     external: true
   centopeia_internal:
+    external: true
+  centopeia_ai:
     external: true
