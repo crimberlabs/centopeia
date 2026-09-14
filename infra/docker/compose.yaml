@@ -15,7 +15,7 @@ services:
       - centopeia_internal
 
   core:
-    image: centopeia-core:0.2.0
+    image: centopeia-core:0.3.0
     container_name: centopeia-core
     restart: unless-stopped
     env_file:
