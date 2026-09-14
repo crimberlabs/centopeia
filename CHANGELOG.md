@@ -18,6 +18,10 @@ Enquanto esse ciclo não for concluído, as mudanças permanecem em **Não lanç
 
 # [Não lançado]
 
+---
+
+# [0.3.0] - 2026-09-14
+
 ## Adicionado
 
 ### Versionamento e repositório
