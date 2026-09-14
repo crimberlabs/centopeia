@@ -1,19 +1,40 @@
 import json
 from datetime import datetime, timezone
+from ipaddress import ip_address
 from typing import Literal
 
 from fastapi import HTTPException
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from app.database import get_connection
 
 
 class WorkerRegisterRequest(BaseModel):
-    worker_id: str
+    worker_id: str = Field(min_length=1, max_length=128)
     address: str
     port: int = Field(ge=1, le=65535)
-    version: str
+    version: str = Field(min_length=1, max_length=64)
     capabilities: list[str] = Field(default_factory=list)
+
+    @field_validator("worker_id", "version")
+    @classmethod
+    def validate_non_blank(cls, value: str) -> str:
+        value = value.strip()
+
+        if not value:
+            raise ValueError("must not be blank")
+
+        return value
+
+    @field_validator("address")
+    @classmethod
+    def validate_address(cls, value: str) -> str:
+        try:
+            return str(ip_address(value))
+        except ValueError as exc:
+            raise ValueError(
+                "must be a valid IPv4 or IPv6 address"
+            ) from exc
 
 
 class WorkerHeartbeatRequest(BaseModel):
