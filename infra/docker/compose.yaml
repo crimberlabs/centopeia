@@ -23,6 +23,8 @@ services:
     environment:
       POSTGRES_HOST: postgres
       REDIS_HOST: redis
+      OLLAMA_BASE_URL: http://10.77.0.2:11434
+      OLLAMA_TIMEOUT_SECONDS: 90
     networks:
       - centopeia_internal
       - centopeia_ai

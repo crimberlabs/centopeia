@@ -2,7 +2,10 @@ import os
 
 import psycopg
 import redis
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+
+from app.model_gateway.gateway import ModelGateway
+from app.model_gateway.models import ChatRequest, ChatResponse
 
 from app.worker_registry import (
     WorkerHeartbeatRequest,
@@ -16,8 +19,10 @@ from app.worker_registry import (
 
 app = FastAPI(
     title="CentopeIA Core",
-    version="0.3.0",
+    version="0.4.0-dev",
 )
+
+model_gateway = ModelGateway()
 
 
 def check_postgres() -> bool:
@@ -91,3 +96,14 @@ def workers_list():
 @app.get("/workers/{worker_id}")
 def workers_get(worker_id: str):
     return get_worker(worker_id)
+
+
+@app.post("/chat", response_model=ChatResponse)
+def chat(payload: ChatRequest):
+    try:
+        return model_gateway.chat(payload)
+    except RuntimeError as exc:
+        raise HTTPException(
+            status_code=502,
+            detail=str(exc),
+        ) from exc
