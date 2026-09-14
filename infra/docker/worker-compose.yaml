@@ -1,0 +1,13 @@
+services:
+  centopeia-worker:
+    build:
+      context: .
+    image: centopeia-worker:0.1.0
+    container_name: centopeia-worker
+    restart: unless-stopped
+
+    environment:
+      WORKER_ID: cpia-dev-wkr-01
+
+    ports:
+      - "10.77.0.2:8080:8080"
